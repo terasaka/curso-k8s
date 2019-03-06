@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: giropops-v2
+  namespace: terasaka
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 5
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: giropops
+        version: "2"
+    spec:
+      containers:
+      - name: giropops
+        image: terasaka/curso-k8s:v2
+        ports:
+        - containerPort: 80
+        - containerPort: 32555
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: "250m"
+          requests:
+            memory: 32Mi
+            cpu: "125m"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
